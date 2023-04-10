@@ -1,1 +1,1 @@
-# Bitcoin from-scratch in Python
+Bitcoin from-scratch in Python
