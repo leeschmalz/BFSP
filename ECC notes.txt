@@ -33,8 +33,22 @@ the important property is that:
         - 2=1*1+b then b=1
         - p+q=-r i.e -2=1*-3+1=-2 
 
+to calculate the third point, simply
+    - xr = m^2 - xp - xq
+    - yr = curve(xr) = yp + m(xr-xp)
+
 on the curve, multplication by a scalar is p*3 = p+p+p, which is n-additions.
     - double and add algorithm makes it faster
 
 
 secp256k1, the bitcoin curve, is a specific elliptic curve. y^2 = x^3 + 7
+
+The above is a description of the reals, but we will actually use finite fields
+    - same as above, except mod some prime (p)
+
+What does it mean for points to be aligned mod p? 
+    - a line is the set of points that satisfy ax + by + c = 0 mod p
+    - this is standard line equation mod p
+    - visually, the line just wraps around at y = p, with the same slope
+
+To calculate the third point, just add mod p at each step from before
