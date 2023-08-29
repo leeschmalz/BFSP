@@ -63,7 +63,19 @@ valid_key_pair = {'sk':'5K4Uvj9SXyYcPQWj6eos7sVHpWj8YCuTUMfGW86mtcMFRib3LCt', # 
                   }
 
 if __name__ == '__main__':
-    print(f"Private key decompression test passed: {decompressPrivateKey(valid_key_pair['sk_compressed']) == valid_key_pair['sk']}")
-    print(f"Private key to public key test passed: {privateToPublicKey(valid_key_pair['sk']) == valid_key_pair['pk_compressed']}")
-    print(f"Compressed public key to compressed address test passed: {publicKeyToAddress(valid_key_pair['pk_compressed']) == valid_key_pair['address_compressed']}")
-    print(f"Public key to address test passed: {publicKeyToAddress(valid_key_pair['pk']) == valid_key_pair['address']}")
+    # validate all functions
+    address = publicKeyToAddress(
+                privateToPublicKey(
+                    decompressPrivateKey(valid_key_pair['sk_compressed']),
+                    compressed=False)
+                )
+    
+    address_compressed = publicKeyToAddress(
+                            privateToPublicKey(
+                                decompressPrivateKey(valid_key_pair['sk_compressed']),
+                                compressed=True)
+                            )
+    
+    print(f"Test without compression passed: {address==valid_key_pair['address']}")
+    print(f"Test with compression passed: {address_compressed==valid_key_pair['address_compressed']}")
+    
