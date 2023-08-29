@@ -97,5 +97,5 @@ if __name__ == '__main__':
     print(f'bitcoin generator is on curve: {bitcoin_G.is_on_curve()}')
     print(f'add method test passed: {(bitcoin_G + bitcoin_G).is_on_curve()}')
     print(f'double method test passed: {bitcoin_G.double() == (bitcoin_G + bitcoin_G)}')
-    print(f'double-and-add method test passed: {(bitcoin_G*6) == (bitcoin_G + bitcoin_G + bitcoin_G + bitcoin_G + bitcoin_G + bitcoin_G)}')
+    print(f'double-and-add method test passed: {(bitcoin_G*5) == (bitcoin_G + bitcoin_G + bitcoin_G + bitcoin_G + bitcoin_G)}')
 
