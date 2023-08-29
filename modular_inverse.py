@@ -1,11 +1,9 @@
 # since we are dealing in finite field, we cannot do normal division.
 # these functions help us find multiplicative inverses. 
-# TODO: need to revisit this algorithm from number theory
+# TODO: need to revisit this algorithm
 def extended_euclidean_algorithm(a, b):
     """
     Returns (gcd, x, y) s.t. a * x + b * y == gcd
-    This function implements the extended Euclidean
-    algorithm and runs in O(log b) in the worst case,
     taken from Wikipedia.
     """
     old_r, r = a, b
