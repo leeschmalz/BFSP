@@ -21,12 +21,22 @@ def decompressPrivateKey(sk_compressed):
 
     return sk
 
-def privateToPublicKey(private_key):
+def privateToPublicKey(private_key, compressed=True):
     '''
     Bitcoin public key is pk * G where G is the bitcoin generator.
     '''
-    public_key = ''
+    private_key_bytes = base58.b58decode(private_key)[1:-4]
+
+    private_key_int = int.from_bytes(private_key_bytes, byteorder='big')
+    public_key_point = bitcoin_G * private_key_int
     
+    x_coord = public_key_point.x.to_bytes(32, byteorder='big').hex().upper()
+    y_coord = public_key_point.y.to_bytes(32, byteorder='big').hex().upper()
+    if compressed:
+        public_key = '02' + x_coord
+    else:
+        public_key = '04' + x_coord + y_coord
+
     return public_key
 
 def publicKeyToAddress(public_key):
@@ -45,3 +55,5 @@ valid_key_pair = {'sk':'5K4Uvj9SXyYcPQWj6eos7sVHpWj8YCuTUMfGW86mtcMFRib3LCt', # 
 
 if __name__ == '__main__':
     print(f"Private key decompression test passed: {decompressPrivateKey(valid_key_pair['sk_compressed']) == valid_key_pair['sk']}")
+    print(f"Private key to public key test passed: {privateToPublicKey(valid_key_pair['sk']) == valid_key_pair['pk_compressed']}")
+    
