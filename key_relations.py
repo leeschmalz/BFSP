@@ -1,5 +1,5 @@
 from hash_functions import sha256, ripemd160
-from elliptic_curve import bitcoin_curve, bitcoin_G
+from elliptic_curve import bitcoin_G
 import base58
 
 def decompressPrivateKey(sk_compressed):
