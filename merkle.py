@@ -19,14 +19,17 @@ class MerkleNode:
             # 4. double sha256 (hash256)
             # 5. convert to hex
             # 6. byte swap endian-ness
-            self.hash256 = byte_swap(
-                        sha256(sha256(
-                                bytes.fromhex(
-                                    (byte_swap(children[0].hash256) + byte_swap(children[1].hash256)) # 1, 2
-                                    ) # 3
-                            )) # 4
-                        .hex() # 5
-                    ) # 6
+            self.hash256 = (
+                byte_swap(
+                    sha256(sha256(
+                            bytes.fromhex(
+                                byte_swap(children[0].hash256) + byte_swap(children[1].hash256) # 1, 2
+                            ) # 3
+                        )
+                    ) # 4
+                    .hex() # 5
+                ) # 6
+            )
         else:
             self.hash256 = hash256
 
