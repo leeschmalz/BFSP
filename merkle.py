@@ -63,6 +63,7 @@ class MerkleTree:
         return self.nodes[-1].hash256
     
 if __name__ == '__main__':
+    # test using a real block and merkle root from blockchain.info
     url = 'https://blockchain.info/rawblock/0000000000000000000117b51c3d21681ddae3cc9e81cd9985cff86296e9c238'
     response = requests.get(url)
     block_data = response.json()
