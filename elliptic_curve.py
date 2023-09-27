@@ -5,8 +5,9 @@ class Curve:
     Elliptic Curve over the field of integers modulo a prime.
     Points on the curve satisfy y^2 = x^3 + a*x + b (mod p).
     """
-    def __init__(self, p, a, b):
+    def __init__(self, p, n, a, b):
         self.p = p
+        self.n = n
         self.a = a
         self.b = b
     
@@ -83,6 +84,7 @@ class Point():
 # secp256k1 uses a = 0, b = 7, so we're dealing with the curve y^2 = x^3 + 7 (mod p)
 bitcoin_curve = Curve(
     p = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F,
+    n = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141, # secp256k1 group order
     a = 0x0000000000000000000000000000000000000000000000000000000000000000,
     b = 0x0000000000000000000000000000000000000000000000000000000000000007,
 )
@@ -98,4 +100,5 @@ if __name__ == '__main__':
     print(f'add method test passed: {(bitcoin_G + bitcoin_G).is_on_curve()}')
     print(f'double method test passed: {bitcoin_G.double() == (bitcoin_G + bitcoin_G)}')
     print(f'double-and-add method test passed: {(bitcoin_G*5) == (bitcoin_G + bitcoin_G + bitcoin_G + bitcoin_G + bitcoin_G)}')
+    print(f'secp256k1 group order test passed: {(bitcoin_G * bitcoin_curve.n).x is None}') # G * n is identity
 
