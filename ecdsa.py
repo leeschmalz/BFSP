@@ -7,11 +7,11 @@ class Transaction:
     # class used by the sender to broadcast a transaction to the blockchain
     def __init__(self, sender_pk, receiver_pk, amount):
         self.sender_pk = sender_pk # public key of sender
-        self.receiver = receiver_pk
+        self.receiver_pk = receiver_pk
         self.amount = amount
         self.signature = None
 
-        self.message = int( sha256((str(sender_pk.x) + str(receiver_pk.x) + str(amount)).encode('utf-8'), return_hex=True), 16)
+        self.message = int( sha256((str(sender_pk.x if sender_pk is not None else None) + str(receiver_pk.x) + str(amount)).encode('utf-8'), return_hex=True), 16)
 
     def sign(self, sk):
         message = self.message
