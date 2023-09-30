@@ -11,6 +11,9 @@ class Curve:
         self.a = a
         self.b = b
     
+    def __eq__(self, other):
+        return self.p == other.p and self.n == other.n and self.a == other.a and self.b == other.b
+    
 class Point():
     def __init__(self, x, y, curve):
         self.curve = curve
