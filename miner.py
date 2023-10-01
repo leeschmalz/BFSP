@@ -30,7 +30,7 @@ all_ports.discard(home_port)
 # each node (mining and non-minig) will establish a connection to 3 other nodes,
 # a far overly simplified version of the gossip style bitcoin network
 connections = random.sample(list(all_ports), 1)
-print(f'broadcasting to ports {connections}')
+print(f'broadcasting to peers {connections}')
 
 payout_pk = bitcoin_G*args.private_key
 
@@ -104,6 +104,7 @@ def manage_mempool():
             continue
         seen_messages_buffer = (seen_messages_buffer[-19:] + [data]) if len(seen_messages_buffer) >= 20 else (seen_messages_buffer + [data])
 
+        broadcast((data, home_port), connections)
 
         if isinstance(data, Block):
             print(f'received block from: {address}\n')
@@ -117,19 +118,18 @@ def manage_mempool():
                 main_chain.blocks.append(new_block)
                 for tx in new_block.transactions:
                     mempool.discard(tx)
-                continue
 
-            if new_block.prev_block_hash == main_chain.blocks[-1].block_hash:
+            elif new_block.prev_block_hash == main_chain.blocks[-1].block_hash:
                 # if the new block extends the main chain, add it
                 main_chain.blocks.append(new_block)
                 for tx in new_block.transactions:
                     mempool.discard(tx)
+
             else:
                 # TODO: node may be out of consensus, look for a longer chain
                 pass
-            print(f'blockchain valid: {main_chain.verify_blockchain(difficulty=MINING_DIFFICULTY)}')
 
-        elif isinstance(data, Transaction):
+        if isinstance(data, Transaction):
             print(f'received transaction from: {address}\n')
             new_transaction = data
             if not new_transaction.verify_signature():
@@ -143,12 +143,11 @@ def manage_mempool():
             mempool.add(new_transaction)
             print(f'transactions in mempool: {len(mempool)}')
 
-            broadcast((new_transaction, home_port), connections)
-
         if len(main_chain.blocks):
             best_block_to_mine = assemble_best_block(mempool=mempool, blockchain=main_chain)
             new_block_available.set() # alert the mining process to switch to new block
-
+        print(f'blocks in main chain: {len(main_chain.blocks)}')
+        
 mining_thread = threading.Thread(target=mine_block)
 mining_thread.start()
 

@@ -25,7 +25,7 @@ all_ports.discard(home_port)
 # each node (mining and non-minig) will establish a connection to 3 other nodes,
 # a far overly simplified version of the gossip style bitcoin network
 connections = random.sample(list(all_ports), 1)
-print(f'broadcasting to ports {connections}')
+print(f'broadcasting to peers {connections}')
 
 server_socket = start_server(home_port)
 main_chain = Blockchain(block_size=BLOCK_SIZE)
@@ -50,6 +50,8 @@ while True:
         continue
     seen_messages_buffer = (seen_messages_buffer[-19:] + [data]) if len(seen_messages_buffer) >= 20 else (seen_messages_buffer + [data])
 
+    broadcast((data, home_port), connections)
+
     if isinstance(data, Transaction):
         print(f'received transaction from: {address}\n')
         new_transaction = data
@@ -62,13 +64,12 @@ while True:
             print('received transaction already in chain. ignoring.')
             continue
 
-        broadcast((new_transaction, home_port), connections)
 
     if isinstance(data, Block):
         print(f'received block from: {address}\n')
         new_block = data
         print(f'received new block with {len(new_block.transactions)-1} transactions.') # -1 to account for block reward
-        print(new_block.__dict__)
+        print(main_chain.__dict__)
 
         valid_pow = new_block.verify_proof_of_work(difficulty=MINING_DIFFICULTY)
         valid_signatures = new_block.verify_tx_signatures()
@@ -77,16 +78,17 @@ while True:
             print('received invalid block. ignoring.')
             continue
 
-        broadcast((new_block, home_port), connections)
-
         if len(main_chain.blocks) == 0:
-            main_chain.blocks.append(block)
-            continue
+            main_chain.blocks.append(new_block)
+            
 
-        if new_block.prev_block_hash == main_chain.blocks[-1].block_hash:
+        elif new_block.prev_block_hash == main_chain.blocks[-1].block_hash:
             # if the new block extends the main chain, add it
             main_chain.blocks.append(new_block)
             # broadcast((main_chain, home_port), connections)
         else:
             # TODO: node is out of consensus, resolve
+            print('received block that doesnt fit on main chain')
             pass
+        
+    print(f'blocks in main chain: {len(main_chain.blocks)}')
