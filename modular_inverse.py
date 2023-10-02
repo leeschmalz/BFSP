@@ -1,25 +1,38 @@
-# since we are dealing in finite field, we cannot do normal division.
-# these functions help us find multiplicative inverses. 
-# TODO: need to revisit this algorithm
-def extended_euclidean_algorithm(a, b):
+# Pseudocode from wikipedia:
+# function extended_gcd(a, b)
+#     (old_r, r) := (a, b)
+#     (old_s, s) := (1, 0)
+#     (old_t, t) := (0, 1)
+    
+#     while r ≠ 0 do
+#         quotient := old_r div r
+#         (old_r, r) := (r, old_r − quotient × r)
+#         (old_s, s) := (s, old_s − quotient × s)
+#         (old_t, t) := (t, old_t − quotient × t)
+    
+#     output "Bézout coefficients:", (old_s, old_t) # a,b st. ax+by = gcd(a,b).
+#     output "greatest common divisor:", old_r
+#     output "quotients by the gcd:", (t, s)
+
+def inv(a, b):
     """
-    Returns (gcd, x, y) s.t. a * x + b * y == gcd
+    calculates (gcd, x, y) s.t. a * x + b * y == gcd mod p
     taken from Wikipedia.
+
+    since we use a prime modulus (b), gcd == 1. 
+    therefore: 
+    ax + by = 1 mod b
+    and since by = 0 mod b
+    ax = 1 mod b , in other words, x is the inverse of a mod b
     """
     old_r, r = a, b
     old_s, s = 1, 0
-    old_t, t = 0, 1
     while r != 0:
         quotient = old_r // r
         old_r, r = r, old_r - quotient * r
         old_s, s = s, old_s - quotient * s
-        old_t, t = t, old_t - quotient * t
-    return old_r, old_s, old_t
 
-def inv(n, p):
-    """ returns modular multiplicate inverse m s.t. (n * m) % p == 1 """
-    gcd, x, y = extended_euclidean_algorithm(n, p) # pylint: disable=unused-variable
-    return x % p
+    return old_s % b
 
 if __name__ == "__main__":
     print(f'inverse of 5 mod 3: {inv(5,3)}')
