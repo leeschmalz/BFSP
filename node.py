@@ -1,5 +1,5 @@
 from blockchain import Block, Blockchain
-from ecdsa import Transaction
+from transaction import Transaction
 import pickle
 from network import start_server, broadcast
 from consensus_parameters import MINING_DIFFICULTY, BLOCK_SIZE

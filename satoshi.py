@@ -1,4 +1,4 @@
-from ecdsa import Transaction
+from transaction import Transaction
 from blockchain import Block, Blockchain
 from elliptic_curve import bitcoin_G
 from network import broadcast
