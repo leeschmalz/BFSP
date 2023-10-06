@@ -43,11 +43,12 @@ class Point():
         # if other is identity
         if other.x == None:
             return self
-
-        if self.x == other.x and self.y != other.y:
+        
+        # if points are on a vertical line -> identity
+        if self.x == other.x and self.y == -(other.y-self.curve.p):
             return Point(None, None, self.curve)
 
-        if self.x == other.x:
+        if self.x == other.x and self.y == other.y:
             # if the points are the same, we want the slope of the tanget line
             slope = (3 * self.x**2 + self.curve.a) * inv(2 * self.y, self.curve.p)
         else:
