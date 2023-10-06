@@ -14,25 +14,25 @@
 #     output "greatest common divisor:", old_r
 #     output "quotients by the gcd:", (t, s)
 
-def inv(a, b):
+def inv(x, p):
     """
-    calculates (gcd, x, y) s.t. a * x + b * y == gcd mod p
+    calculates (gcd, x, y) s.t. ax + by == gcd mod p
     taken from Wikipedia.
 
     since we use a prime modulus (b), gcd == 1. 
     therefore: 
     ax + by = 1 mod b
     and since by = 0 mod b
-    ax = 1 mod b , in other words, x is the inverse of a mod b
+    ax = 1 mod b, in other words, x is the inverse of a mod b
     """
-    old_r, r = a, b
+    old_r, r = x, p
     old_s, s = 1, 0
     while r != 0:
         quotient = old_r // r
         old_r, r = r, old_r - quotient * r
         old_s, s = s, old_s - quotient * s
 
-    return old_s % b
+    return old_s % p
 
 if __name__ == "__main__":
     print(f'inverse of 5 mod 3: {inv(5,3)}')
